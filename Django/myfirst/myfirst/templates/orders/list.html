@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Последние Заказы{% endblock %}
+{% block name %}Последние заказы{% endblock %}
+{% block content %}
+<div class="container py-3">
+	{% if latest_orders_list %}
+
+		{% for a in latest_orders_list %}
+			<a href = "{% url 'orders:detail' a.id%}">{{a.pub_date}}</a>
+			<br><hr>
+		{% endfor %}
+
+	{% else %}
+		Заказы не найдены.
+	{% endif %}
+</div>
+{% endblock %}

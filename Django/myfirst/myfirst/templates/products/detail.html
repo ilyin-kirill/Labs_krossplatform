@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block name%}Товары{% endblock %}
+{% block title %}{{product.product_title}}{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+	<h2>{{product.product_title}}</h2>
+
+	<p>{{product.product_text}}</p>
+
+	<em>Цена: {{product.product_price}} рублей.</em>
+
+	<hr>
+	{% if latest_reviews_list %}
+		{% for c in latest_reviews_list %}
+			<p>
+				<strong>{{c.author_name}}</strong>
+				<p>{{c.review_text}}</p>
+			</p>
+		{% endfor %}
+	{% else %}
+	Отзывы не найдены! Станьте первым!
+	{% endif %}
+	<hr>
+
+	<form action="{% url 'products:leave_review' product.id %}" method="POST">
+		{% csrf_token %}
+		<input type="text" class="form-control" required placeholder="Ваше имя" name="name"><br>
+		<textarea name="text" class="form-control" required="" placeholder="Текст отзыва:" cols="30" rows="10"></textarea><br>
+		<button class="btn btn-success" type="submit">Оставить отзыв</button>
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Последние товары{% endblock %}
+{% block name %}Последние товары{% endblock %}
+{% block content %}
+<div class="container py-3">
+	<div class="card-deck mb-3 text-center">
+	{% if latest_products_list %}
+
+		{% for a in latest_products_list %}
+			
+		<br><hr>
+		<div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal"><a href = "{% url 'products:detail' a.id%}">{{a.product_title}}</a></h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">{{a.product_price}} руб.<small class="text-muted fw-light"></small></h1>
+          </div>
+        </div>
+		{% endfor %}
+
+	{% else %}
+		Товары не найдены.
+	{% endif %}
+	</div>
+	<form action="{% url 'products:post_products' %}" method="POST">
+		{% csrf_token %}
+		<input type="text" class="form-control" required placeholder="Название товара" name="name"><br>
+		<input type="text" class="form-control" required placeholder="Описание" name="longname"><br>
+		<input type="text" class="form-control" required placeholder="Стоимость" name="price"><br>
+		<button class="btn btn-success" type="submit">Добавить товар</button>
+	</form>
+</div>
+{% endblock %}

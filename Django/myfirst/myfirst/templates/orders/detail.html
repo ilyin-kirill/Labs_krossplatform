@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказ {{order.id}} {{order.pub_date}}{% endblock %}
+{% block name%}Последние заказы{% endblock %}
+{% block content %}
+<div class="container py-3">
+	<h2>Заказ {{order.id}} - {{order.pub_date}}</h2>
+
+	<em>Стоимость: {{price}} рублей.</em>
+
+	<hr>
+	{% if latest_productsums_list %}
+		{% for c in latest_productsums_list %}
+			<p>
+				<strong>{{c.product.product_title}}</strong>
+				<p>Цена: {{c.product.product_price}} рублей.</p>
+				<p>Количество: {{c.amount}}</p>
+				<hr>
+			</p>
+		{% endfor %}
+		<br>
+		<a href = "{% url 'orders:finish_order' order.id%}" class="btn btn-lg btn-block btn-outline-primary">Оформить заказ</a>
+	{% else %}
+	Товары не найдены!
+	{% endif %}
+</div>
+{% endblock %}
