@@ -14,6 +14,7 @@ namespace TKR2.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        
         private readonly Context _context;
 
         public UsersController(Context context)
@@ -22,16 +23,16 @@ namespace TKR2.Controllers
         }
 
         // GET: api/Users
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var users = _context.Users.Include(r => r.Rides);
+            var users = _context.Users;
             return await users.ToListAsync();
         }
 
         // GET: api/Users/5
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -45,7 +46,7 @@ namespace TKR2.Controllers
             return user;
         }
 
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpGet("topusers")]
         public CreatedAtActionResult TopUsers()
         {
@@ -65,7 +66,7 @@ namespace TKR2.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -94,7 +95,7 @@ namespace TKR2.Controllers
 
             return NoContent();
         }
-        [Authorize(Roles = "admin , user")]
+        //[Authorize(Roles = "admin , user")]
         [HttpPost("addride/{id}/{ids}")]
         public async Task<ActionResult<User>> AddRide(int id, int ids)
         {
@@ -123,37 +124,30 @@ namespace TKR2.Controllers
         // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("PostUser", new
-            { id = user.Id }, user);
+            return Ok();
         }
 
         // DELETE: api/Users/5
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
             var user = _context.Users.Include(r => r.Rides).FirstOrDefault(i => i.Id == id);
             if (user == null)
             {
-                return CreatedAtAction("DeleteUser", new
-                {
-                    result = "Пользователя с таким id не существует."
-                });
+                return NotFound();
             }
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("DeleteUser", new
-            {
-                result = "Пользователь удален."
-            });
+            return Ok();
         }
 
         private bool UserExists(int id)

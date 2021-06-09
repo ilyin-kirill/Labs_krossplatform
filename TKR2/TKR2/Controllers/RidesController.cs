@@ -24,7 +24,7 @@ namespace TKR2.Controllers
         }
 
         // GET: api/Rides
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ride>>> GetRides()
         {
@@ -117,7 +117,7 @@ namespace TKR2.Controllers
         // POST: api/Rides
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(Roles = "admin , user")]
+        //[Authorize(Roles = "admin , user")]
         [HttpPost("{id}")]
         public async Task<ActionResult<Ride>> PostRide(Ride ride, int id)
         {
@@ -125,15 +125,16 @@ namespace TKR2.Controllers
             if (ride.User != null)
             {
                 ride.Driver = _mng.SelectDriverForUser(_context.Users.FirstOrDefault(i => i.Id == id), _context.Drivers.ToList());
-                _context.Rides.Add(ride);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("PostRide", new { id = ride.Id }, ride);
+                if (ride.Driver != null)
+                {
+                    _context.Rides.Add(ride);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else return NotFound();
             } else
             {
-                return CreatedAtAction("PostRide", new
-                {
-                    result = "Пользователя с таким id не существует."
-                });
+                return NotFound();
             }
         }
         [Authorize(Roles = "admin , driver")]

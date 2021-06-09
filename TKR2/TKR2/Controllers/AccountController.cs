@@ -11,18 +11,24 @@ using TKR2.Models;
 
 namespace TKR2.Controllers
 {
+    public class Person
+    {
+        public string username;
+        public string password;
+    }
     public class AccountController : Controller
     {
+        
         private List<User> people = new List<User>
         {
-            new User { Name = "admin", Login="admin@gmail.com", Password="12345", Role = "admin", Rating = 5.0 },
+            new User { Name = "admin", Login="admin", Password="12345", Role = "admin", Rating = 5.0 },
             new User { Name = "Sasha", Login="qwerty@gmail.com", Password="55555", Role = "user", Rating = 4.8 },
             new User { Name = "Test", Login="testdriver@gmail.com", Password="123321", Role = "driver", Rating = 4.95 }
         };
         [HttpPost("/token")]
-        public IActionResult Token([FromForm] string username, [FromForm] string password)
+        public IActionResult Token(Person person)
         {
-            var identity = GetIdentity(username, password);
+            var identity = GetIdentity(person.username, person.password);
             if (identity == null)
             {
                 return BadRequest(new { errorText = "Invalid username or password." });
